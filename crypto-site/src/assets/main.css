@@ -1,5 +1,40 @@
 @import './base.css';
 
+@font-face {
+  font-family: 'TT Norms Pro';
+  src: url('/fonts/TTNormsPro-Bold.eot');
+  src: url('/fonts/TTNormsPro-Bold.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/TTNormsPro-Bold.woff') format('woff'),
+    url('/fonts/TTNormsPro-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro';
+  src: url('/fonts/TTNormsPro-Medium.eot');
+  src: url('/fonts/TTNormsPro-Medium.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/TTNormsPro-Medium.woff') format('woff'),
+    url('/fonts/TTNormsPro-Medium.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'TT Norms Pro';
+  src: url('/fonts/TTNormsPro-Regular.eot');
+  src: url('/fonts/TTNormsPro-Regular.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/TTNormsPro-Regular.woff') format('woff'),
+    url('/fonts/TTNormsPro-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+}
+
+body {
+  font-family: 'TT Norms Pro';
+  font-weight: 400;
+}
+
 /* #app {
   max-width: 1280px;
   margin: 0 auto;

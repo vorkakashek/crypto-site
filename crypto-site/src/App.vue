@@ -1,77 +1,56 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import Navigation from "./components/Navigation.vue";
-// import HelloWorld from "./components/HelloWorld.vue";
-
-let data = [
-  {
-    id: '368-231-521',
-    name: 'Петров Петр Петрович',
-    transactions: [
-      {
-        date: '20.01.2022',
-        summ: '100',
-      }
-    ]
-  },
-  {
-    id: '123-553-000',
-    name: 'Иванов Иван Иваныч',
-    transactions: [
-      {
-        date: '20.01.2022',
-        summ: '100',
-      }
-    ]
-  },
-]
 
 </script>
 
 <template>
   <Navigation />
-  <!-- <header>
-      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-      <div class="wrapper">
-        <HelloWorld msg="You did it!" />
-
-          <nav>
-              <RouterLink to="/">Home</RouterLink>
-              <RouterLink to="/about">About</RouterLink>
-            </nav>
-          </div>
-        </header> -->
-
   <RouterView />
-  <div class="div" >
-    <div v-for="item in data">{{ item.transactions }}</div>
-  </div>
 </template>
 
 <style lang="scss">
 :root {
   --bg: #F4F5FA;
   --light: #808693;
+  --main: #42454B;
+  --main_tint_1: #ACACC8;
+  --main_tint_2: #70748D;
+
+  --blue: #037BF5;
+
+  --hover_bg: #F6F6F6;
+
+  --error: #F15744;
 }
 
 * {
   box-sizing: border-box;
+  letter-spacing: .02rem;
+  font-family: 'TT Norms Pro';
+  font-size: 14px;
+
+  @include r (h) {
+    font-size: 12px;
+  }
+}
+
+* :not(svg *) {
+  transition: .1s ease;
 }
 
 body,
 html {
   background-color: var(--bg);
+  margin: 0;
+  color: var(--main);
+  font-family: 'TT Norms Pro';
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #app {
   display: block;
-}
-
-.content {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 16px;
 }
 
 button {
