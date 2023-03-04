@@ -1,11 +1,52 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useModal } from "@/stores/store"
+import { useUser } from "@/stores/store"
+
 import Panel from "@/components/Panel.vue"
 import Input from "@/components/Input.vue"
 import Checkbox from "@/components/Checkbox.vue"
+import Button from "@/components/Button.vue"
 
-let tab_current = ref(0)
 
+let store = useModal()
+let storeUser = useUser()
+
+let tab_current = computed({
+    get: () => store.currentTab,
+    set: (val) => {
+        store.currentTab = val
+        return val
+    }
+})
+
+let form_error = ref(false),
+    timer = ref(),
+    restore_tab = ref(false)
+
+let sign_in = (e) => {
+    // form_error.value = true
+    storeUser.setLoggedIn(true)
+    store.hide()
+}
+
+let sign_up = (e) => {
+    form_error.value = true
+}
+
+let restore = (e) => {
+    form_error.value = true
+}
+
+watch(form_error, () => {
+    if (form_error.value) {
+        timer.value = setTimeout(() => {
+            form_error.value = false
+        }, 5000)
+    }
+})
+
+watch(tab_current, () => form_error.value = false)
 
 </script>
 
@@ -20,15 +61,31 @@ let tab_current = ref(0)
                         {{ tab_name }}
                     </label>
                 </div>
-                <div class="tab_content" v-if="tab_current === 0">
+                <div class="tab_content" v-if="tab_current === 0 && !restore_tab">
                     <form>
                         <Input placeholder="e-mail" type="email" />
                         <Input placeholder="password" type="password" />
-                        <Checkbox :text="$t('modal.terms')"/>
+                        <div class="restore_pass" @click="restore_tab = true">{{ $t("modal.restore_msg") }}</div>
+                        <Button :text="$t('main.sign_in')" @click="sign_in" />
+                        <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
                     </form>
                 </div>
                 <div class="tab_content" v-if="tab_current === 1">
-                    <div>reg</div>
+                    <form>
+                        <Input placeholder="e-mail" type="email" />
+                        <Input placeholder="password" type="password" />
+                        <Checkbox :text="$t('modal.terms')" />
+                        <Button :text="$t('main.sign_up')" @click="sign_up" />
+                        <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
+                    </form>
+                </div>
+                <div class="tab_content" v-if="tab_current === 0 && restore_tab">
+                    <form>
+                        <Input placeholder="e-mail" type="email" />
+                        <Button :text="$t('main.restore')" @click="restore" />
+                        <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
+                        <div class="restore_pass_back" @click="restore_tab = false">{{ $t("modal.back") }}</div>
+                    </form>
                 </div>
             </div>
         </template>
@@ -36,6 +93,37 @@ let tab_current = ref(0)
 </template>
 
 <style lang="scss" scoped>
+.restore_pass,
+.restore_pass_back {
+    cursor: pointer;
+    font-weight: 700;
+    color: #70748D;
+    font-size: 12px;
+    letter-spacing: .02rem;
+    display: inline-block;
+    margin-bottom: 16px;
+
+    &:hover {
+        color: var(--blue);
+    }
+}
+
+.restore_pass_back {
+    text-align: center;
+    display: block;
+    margin-top: 24px;
+    margin-bottom: 0;
+}
+
+#form_error {
+    color: var(--error);
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+    font-size: 11px;
+    opacity: .8;
+}
 
 .tab_content {
     margin-top: 32px;

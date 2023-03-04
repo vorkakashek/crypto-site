@@ -1,20 +1,23 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useUser } from "@/stores/store"
+import { useModal } from "@/stores/store"
 import LangChanger from "@/components/LangChanger.vue";
 import ModalConstructor from '@/components/Modal/ModalConstructor.vue'
 
-let modal = ref()
+// let modal = ref()
 
-onMounted(() => {
-  modal.value.show()
-})
+// onMounted(() => {
+//   modal.value.show()
+// })
 
 
-const store = useUser()
+const store = useUser(),
+    modalStore = useModal()
 
-let logged = ref(true)
-let profile_id = ref('368-231-521')
+
+let logged = ref(true),
+    profile_id = ref('368-231-521')
 
 let logout = () => {
     logged.value = false
@@ -26,7 +29,7 @@ let show_area = ref(false)
 
 
 <template>
-    <ModalConstructor ref="modal" />
+    <ModalConstructor />
     <nav>
         <div class="container">
             <router-link to="/">
@@ -35,14 +38,14 @@ let show_area = ref(false)
             </router-link>
             <LangChanger />
             <div class="area_login" v-if="!store.loggedIn" :class="{ show: show_area }">
-                <button type="button" class="btn_sign_up">{{ $t("main.sign_up") }}</button>
+                <button type="button" class="btn_sign_up" @click="modalStore.show(), modalStore.setTab(1)">{{ $t("main.sign_up") }}</button>
                 <hr>
-                <button type="button" class="btn_sign_in" @click="store.setLoggedIn(true)">{{ $t("main.sign_in") }}</button>
+                <button type="button" class="btn_sign_in" @click="modalStore.show(), modalStore.setTab(0)">{{ $t("main.sign_in") }}</button>
             </div>
 
             <div class="area_profile" v-if="store.loggedIn" :class="{ show: show_area }">
                 <div class="profile_id">
-                    <span>{{ $t("main.profile_id_label") }}: </span>  {{ profile_id }}
+                    <span>{{ $t("main.profile_id_label") }}: </span> {{ profile_id }}
                 </div>
                 <hr>
                 <button type="button" class="log_out" @click="store.setLoggedIn(false)">
@@ -58,6 +61,10 @@ let show_area = ref(false)
 </template>
 
 <style lang="scss" scoped>
+#form_error {
+    color: var(--red)
+}
+
 .logo {
     width: 111px;
     display: block;

@@ -23,3 +23,23 @@ export const useUser = defineStore('user', {
         },
     }
 })
+
+export const useModal = defineStore('modal', {
+    state: () => ({
+        visible: false,
+        currentTab: 0,
+    }),
+    actions: {
+        show() {
+            this.visible = true
+            document.querySelector('html').style.overflow = "hidden"
+        },
+        hide() {
+            this.visible = false
+            document.querySelector('html').removeAttribute("style")
+        },
+        setTab(tab) {
+            this.currentTab = tab
+        }
+    }
+})

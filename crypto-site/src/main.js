@@ -27,6 +27,7 @@ const content = {
             profile_id_label: "Ваш ID",
             sign_in: "Логин",
             sign_up: "Регистрация",
+            restore: "Восстановить пароль",
             day: 'день',
             miner_statistics_label: 'Прибл. награда',
             miner_statistics_label_session: 'За сессию',
@@ -79,8 +80,12 @@ const content = {
         },
         modal: {
             tab_names: ["Логин", "Регистрация"],
-            terms: "Я подтверждаю, что ознакомлен(-а) с {0}, и, что я достиг совершеннолетия и не являюсь гражданином США.",
+            terms: "Я подтверждаю, что ознакомлен(-а) с {0} и, что я достиг(-ла) совершеннолетия и не являюсь гражданином США.",
             tos: "Пользовательским соглашением",
+            error: "Заполните все поля корректно",
+            restore: "Восстановить пароль",
+            restore_msg: "Напомнить пароль?",
+            back: "Назад",
         }
     },
     en: {
@@ -91,6 +96,7 @@ const content = {
             profile_id_label: 'Your ID',
             sign_in: "Sign In",
             sign_up: "Sign Up",
+            restore: "Restore Password",
             day: 'day',
             miner_statistics_label: 'Miner statistics',
             miner_statistics_label_session: 'For session',
@@ -145,6 +151,10 @@ const content = {
             tab_names: ["Login", "Registration"],
             terms: `I confirm that I have read, accepted and agreed to all {0}, that I am of legal age, and I am not specified as a US person.`,
             tos: "Terms of Use",
+            error: "Fill all fields correctly",
+            restore: "Restore password",
+            restore_msg: "Forgot password?",
+            back: "Back",
         }
     }
 }

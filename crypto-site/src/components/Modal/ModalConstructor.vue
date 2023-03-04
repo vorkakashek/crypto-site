@@ -2,43 +2,26 @@
 import { ref } from 'vue'
 import ModalLogin from '@/components/Modal/ModalLogin.vue'
 import { useI18n } from "vue-i18n"
+import { useModal } from "@/stores/store"
 
 const { tm } = useI18n()
-
-const visible = ref(false)
-const emits = defineEmits(["show"]);
-
-let show = () => {
-    visible.value = true
-    document.querySelector('body').style.overflow = "hidden"
-}
-
-defineExpose({
-    show,
-})
-
-let hide = () => {
-    visible.value = false
-    document.querySelector('body').removeAttribute("style")
-}
-
-
+const store = useModal()
 
 </script>
 
 <template>
     <Teleport to="#modal">
         <Transition name="nested" appear>
-            <div class="modal_constructor" v-if="visible">
+            <div class="modal_constructor" v-if="store.visible">
                 <div class="container">
                     <div class="modal">
                         <div class="modal_content">
-                            <app-icon class="modal_close" name="close_2" size="24" @click="hide()" />
+                            <app-icon class="modal_close" name="close_2" size="24" @click="store.hide()" />
                             <ModalLogin />
                         </div>
                     </div>
                 </div>
-                <div class="modal_overlay" @click="hide()"></div>
+                <div class="modal_overlay" @click="store.hide()"></div>
             </div>
         </Transition>
     </Teleport>
@@ -50,6 +33,10 @@ let hide = () => {
     display: flex;
     align-items: center;
     margin-top: 120px;
+
+    @include r (h) {
+        margin-top: 80px;
+    }
 }
 
 .modal_content {
@@ -84,7 +71,7 @@ let hide = () => {
     top: 0;
 
     .container {
-        width: 400px;
+        max-width: 400px;
     }
 }
 

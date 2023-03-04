@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 let props = defineProps({
     type: {
@@ -18,14 +18,25 @@ let props = defineProps({
 let input = ref(''),
     pass_show = ref(false)
 
+let type_computed = computed(() => {
+    if (props.type == 'password') {
+        return pass_show.value ? 'text' : 'password'
+    } else {
+        return props.type
+    }
+})
+
 </script>
 
 <template>
     <label class="custom_input">
-        <div class="password_controller" v-if="type === 'password'">
-            <app-icon name="eye-off" size="18" />
+        <div :class="[{ active: pass_show }, 'password_controller']" v-if="type === 'password'"
+            @click="pass_show = !pass_show">
+            <app-icon name="eye-off" size="18" v-if="!pass_show"/>
+            <app-icon name="eye-on" size="18" v-else/>
         </div>
-        <input :type="type" v-model="input" :class="{ filled: input.length > 0 }">
+        <input :type="type_computed" v-model="input"
+            :class="{ filled: input.length > 0, input_password: type === 'password' }" required>
         <div class="input_label">{{ placeholder }}</div>
     </label>
 </template>
@@ -44,8 +55,9 @@ let input = ref(''),
     align-items: center;
     justify-content: center;
 
-    &:hover {
-        background-color: var(--light);
+    &:hover,
+    &.active {
+        background-color: var(--blue);
     }
 }
 
@@ -63,18 +75,24 @@ let input = ref(''),
         border-radius: 16px;
         font-weight: 700;
         color: var(--main);
+        outline: none;
 
         &:focus,
         &:active,
         &.filled {
+            border-color: var(--blue);
 
             ~.input_label {
                 bottom: 100%;
                 transform: translateY(-4px);
                 // left: 0;
                 font-size: 12px;
-                color: var(--main);
+                color: var(--blue);
             }
+        }
+
+        &.input_password {
+            padding-right: 48px;
         }
     }
 }
@@ -90,5 +108,4 @@ let input = ref(''),
     user-select: none;
     pointer-events: none;
     transition: all .3s ease;
-}
-</style>
+}</style>
