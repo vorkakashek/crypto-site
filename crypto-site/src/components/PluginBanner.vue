@@ -106,6 +106,9 @@ let banner_id = 1
     text-decoration: none;
     position: relative;
     z-index: 1;
+    box-shadow: 0 10px 10px rgba(241, 88, 68, 0.3);
+    transition: all .2s ease-in-out;
+
     >* {
         position: relative;
         z-index: 2;
@@ -115,27 +118,28 @@ let banner_id = 1
         margin-left: 8px;
     }
 
-    &:after {
-        content: '';
-        position: absolute;
-        z-index: 0;
-        filter: blur(20px);
-        height: 80%;
-        width: 100%;
-        left: 0;
-        top: 16px;
-        user-select: none;
-        pointer-events: none;
-        opacity: .7;
-        transition: all .2s ease-in-out;
-    }
+    // &:after {
+    //     content: '';
+    //     position: absolute;
+    //     z-index: 0;
+    //     filter: blur(20px);
+    //     height: 80%;
+    //     width: 100%;
+    //     left: 0;
+    //     top: 16px;
+    //     user-select: none;
+    //     pointer-events: none;
+    //     opacity: .7;
+    //     transition: all .2s ease-in-out;
+    // }
 
     &:hover {
-        &:after {
-            top: 0;
-            filter: blur(0px);
-            opacity: 0;
-        }
+        box-shadow: 0 0px 0px rgba(241, 88, 68, 0);
+        // &:after {
+        //     top: 0;
+        //     filter: blur(0px);
+        //     opacity: 0;
+        // }
     }
 }
 </style>

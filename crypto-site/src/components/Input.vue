@@ -1,0 +1,94 @@
+<script setup>
+
+import { ref } from 'vue'
+
+let props = defineProps({
+    type: {
+        type: String,
+        required: false,
+        default: 'text',
+    },
+    placeholder: {
+        type: String,
+        required: false,
+        default: '',
+    }
+})
+
+let input = ref(''),
+    pass_show = ref(false)
+
+</script>
+
+<template>
+    <label class="custom_input">
+        <div class="password_controller" v-if="type === 'password'">
+            <app-icon name="eye-off" size="18" />
+        </div>
+        <input :type="type" v-model="input" :class="{ filled: input.length > 0 }">
+        <div class="input_label">{{ placeholder }}</div>
+    </label>
+</template>
+
+<style lang="scss" scoped>
+.password_controller {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: var(--light);
+    }
+}
+
+
+
+.custom_input {
+    position: relative;
+    display: block;
+    margin-bottom: 24px;
+
+    input {
+        width: 100%;
+        padding: 16px;
+        border: 1px solid #E8E8E8;
+        border-radius: 16px;
+        font-weight: 700;
+        color: var(--main);
+
+        &:focus,
+        &:active,
+        &.filled {
+
+            ~.input_label {
+                bottom: 100%;
+                transform: translateY(-4px);
+                // left: 0;
+                font-size: 12px;
+                color: var(--main);
+            }
+        }
+    }
+}
+
+.input_label {
+    left: 16px;
+    bottom: 50%;
+    transform: translateY(50%);
+    font-weight: 700;
+    font-size: 14px;
+    color: #C6C7D1;
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+    transition: all .3s ease;
+}
+</style>

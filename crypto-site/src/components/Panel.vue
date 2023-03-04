@@ -15,6 +15,10 @@
     border-radius: 16px;
     margin-top: 24px;
     padding: 16px;
+
+    @include r (h) {
+        padding: 16px 12px;
+    }
 }
 
 </style>

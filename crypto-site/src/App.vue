@@ -1,12 +1,15 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import Navigation from "./components/Navigation.vue";
+import { RouterView } from "vue-router"
+import Navigation from "./components/Navigation.vue"
+import Footer from "./components/Footer.vue"
 
 </script>
 
 <template>
+  <div id="modal"></div>
   <Navigation />
   <RouterView />
+  <Footer />
 </template>
 
 <style lang="scss">
@@ -30,7 +33,7 @@ import Navigation from "./components/Navigation.vue";
   font-family: 'TT Norms Pro';
   font-size: 14px;
 
-  @include r (h) {
+  @include r (sm) {
     font-size: 12px;
   }
 }

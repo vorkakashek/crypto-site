@@ -52,6 +52,35 @@ const content = {
         },
         history: {
             label: "Ваши транзакции",
+            min_withdraw: "Мин. сумма вывода",
+            button: "Вывести средства",
+            header: ["Дата", "Сумма, XMR", "Статус"],
+        },
+        statistics: {
+            label: "Статистика системы",
+            tab_names: ["Лидеры заработка", "Выплаченнные средства"],
+            header_1: ["ID", "Сегодня, XMR", "За неделю, XMR", "За месяц, XMR"],
+            header_2: ["ID", "Сумма, XMR", "Дата", "Время"],
+            online: "Онлайн",
+        },
+        status: {
+            progress: "В процессе",
+            error: "Ошибка",
+            success: "Выполнено",
+        },
+        footer: {
+            contacts: "Контакты",
+            business_inquiries: "Бизнес-запросы",
+            support: "Поддержка",
+            documents: "Документы",
+            terms_and_conditions: "Условия использования",
+            privacy: "Политика конфиденциальности",
+            aml: "AML и CTF политика"
+        },
+        modal: {
+            tab_names: ["Логин", "Регистрация"],
+            terms: "Я подтверждаю, что ознакомлен(-а) с {0}, и, что я достиг совершеннолетия и не являюсь гражданином США.",
+            tos: "Пользовательским соглашением",
         }
     },
     en: {
@@ -87,6 +116,35 @@ const content = {
         },
         history: {
             label: "Your transactions",
+            min_withdraw: "Minimum withdraw",
+            button: "Withdraw",
+            header: ["Date", "Summary, XMR", "Status"],
+        },
+        statistics: {
+            label: "System statistics",
+            tab_names: ["Top performers", "Paid out"],
+            header_1: ["ID", "Today, XMR", "The week, XMR", "The month, XMR"],
+            header_2: ["ID", "Amount, XMR", "Date", "Time"],
+            online: "Online",
+        },
+        status: {
+            progress: "In progress",
+            error: "Error",
+            success: "Success",
+        },
+        footer: {
+            contacts: "Contacts",
+            business_inquiries: "Business inquiries",
+            support: "Support",
+            documents: "Documents",
+            terms_and_conditions: "Terms and conditions",
+            privacy: "Privacy & Cokies Policy",
+            aml: "AML & CTF Policy",
+        },
+        modal: {
+            tab_names: ["Login", "Registration"],
+            terms: `I confirm that I have read, accepted and agreed to all {0}, that I am of legal age, and I am not specified as a US person.`,
+            tos: "Terms of Use",
         }
     }
 }

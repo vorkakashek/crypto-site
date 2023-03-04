@@ -22,5 +22,6 @@ export default defineConfig({
   base: '/crypto-site/',
   server: {
     host: true
-  }
+  },
+  browserslist: ["defaults and supports es6-module", "maintained node versions"]
 });

@@ -184,7 +184,7 @@ watch(miner_started, () => {
     if (miner_started.value) {
         a.value = setInterval(() => {
             speed.value = randomNum(70, 80) / 10
-        }, randomNum(600, 1000))
+        }, randomNum(600, 3000))
     } else {
         clearInterval(a.value)
         speed.value = 0

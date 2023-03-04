@@ -5,6 +5,10 @@ import Error from "@/components/Error.vue";
 import Banner from "@/components/Banner.vue";
 import Miner from "@/components/Miner.vue";
 import History from "@/components/History.vue";
+import Statistics from "@/components/Statistics.vue";
+import { useUser } from "@/stores/store"
+
+const store = useUser()
 
 </script>
 
@@ -12,7 +16,7 @@ import History from "@/components/History.vue";
   <main>
     <div class="container">
       <!-- <div>{{ $t("message.hello") }}</div>
-        <div>язык: {{ $i18n.locale }}</div> -->
+          <div>язык: {{ $i18n.locale }}</div> -->
       <Search />
       <Error />
       <Banner type="horizontal" />
@@ -28,7 +32,8 @@ import History from "@/components/History.vue";
         </div>
       </div>
       <Banner type="horizontal" />
-      <History />
+      <History v-if="store.loggedIn" />
+      <Statistics />
     </div>
   </main>
 </template>
@@ -36,4 +41,5 @@ import History from "@/components/History.vue";
 <style lang="scss">
 main {
   margin-top: 56px;
-}</style>
+}
+</style>

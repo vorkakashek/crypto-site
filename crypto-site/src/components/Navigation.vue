@@ -1,7 +1,15 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUser } from "@/stores/store"
 import LangChanger from "@/components/LangChanger.vue";
+import ModalConstructor from '@/components/Modal/ModalConstructor.vue'
+
+let modal = ref()
+
+onMounted(() => {
+  modal.value.show()
+})
+
 
 const store = useUser()
 
@@ -18,6 +26,7 @@ let show_area = ref(false)
 
 
 <template>
+    <ModalConstructor ref="modal" />
     <nav>
         <div class="container">
             <router-link to="/">
