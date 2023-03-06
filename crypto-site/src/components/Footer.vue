@@ -33,7 +33,8 @@ import Banner from "@/components/Banner.vue";
 <style lang="scss" scoped>
 
 footer {
-    margin-top: 60px;
+    // margin-top: 60px;
+    margin-top: auto;
     padding: 32px 0;
     background-color: #fff;
 }

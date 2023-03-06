@@ -42,6 +42,10 @@ import Footer from "./components/Footer.vue"
   transition: .1s ease;
 }
 
+main {
+  margin-bottom: 60px;
+}
+
 body,
 html {
   background-color: var(--bg);
@@ -53,14 +57,34 @@ html {
 }
 
 #app {
-  display: block;
+  // display: block;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
 button {
   cursor: pointer;
 }
 
-.div {
-  margin-top: 200px;
+h1,
+h2,
+h3 {
+  color: var(--main);
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 500;
 }
 </style>

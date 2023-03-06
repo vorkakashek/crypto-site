@@ -5,7 +5,7 @@ import Panel from '@/components/Panel.vue'
 import Label from "@/components/Label.vue";
 import PluginBanner from "@/components/PluginBanner.vue";
 import { useUser } from "@/stores/store"
-import axios from 'axios';
+// import axios from 'axios';
 
 const store = useUser()
 

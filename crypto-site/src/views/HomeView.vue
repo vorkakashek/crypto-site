@@ -15,8 +15,6 @@ const store = useUser()
 <template>
   <main>
     <div class="container">
-      <!-- <div>{{ $t("message.hello") }}</div>
-          <div>язык: {{ $i18n.locale }}</div> -->
       <Search />
       <Error />
       <Banner type="horizontal" />
