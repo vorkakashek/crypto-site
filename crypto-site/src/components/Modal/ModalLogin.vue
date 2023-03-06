@@ -38,7 +38,7 @@ let sign_in = (e) => {
         if (res.data.success) {
           console.log(res.data);
           storeUser.setLoggedIn(true);
-          storeUser.setUserId(res.data.user.uuid);
+          storeUser.setUserId(res.data.user.id);
           localStorage.setItem("token", res.data.token);
           store.hide();
         }
@@ -69,7 +69,7 @@ let sign_up = (e) => {
         if (res.data.success) {
           storeUser.setLoggedIn(true);
           localStorage.setItem("token", res.data.token);
-          storeUser.setUserId(res.data.user.uuid);
+          storeUser.setUserId(res.data.user.id);
           store.hide();
         }
       })
