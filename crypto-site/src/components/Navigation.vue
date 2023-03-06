@@ -17,7 +17,7 @@ const store = useUser(),
 
 
 let logged = ref(true),
-    profile_id = ref('368-231-521')
+    profile_id = store.getUserId()
 
 let logout = () => {
     logged.value = false

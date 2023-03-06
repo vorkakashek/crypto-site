@@ -37,6 +37,7 @@ let sign_in = (e) => {
       })
       .then((res) => {
         if (res.data.success) {
+          console.log(res.data);
           storeUser.setLoggedIn(true);
           localStorage.setItem("UUID_V4", res.data.user.uuid);
           store.hide();
@@ -110,8 +111,6 @@ let new_password = (e) => {
       .then((res) => {
         if (res.data.success) {
           alert(res.data.message);
-          storeUser.setLoggedIn(true);
-          localStorage.setItem("UUID_V4", res.data.user.uuid);
           store.hide();
         }
       });
