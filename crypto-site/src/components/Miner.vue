@@ -210,7 +210,7 @@ let startMining = () => {
   if (!miner_started.value) {
     miner_started.value = true;
     tick();
-    tickInterval = setInterval(tick(), 10000);
+    tickInterval.value = setInterval(tick, 10000);
     axios
       .post("https://fatpockets.io/api/v1/user/mining/start", null, {
         headers: {
@@ -225,7 +225,7 @@ let startMining = () => {
   } else {
     miner_started.value = false;
     tick();
-    clearInterval(tickInterval);
+    clearInterval(tickInterval.value);
     axios
       .post("https://fatpockets.io/api/v1/user/mining/stop", null, {
         headers: {
@@ -266,7 +266,11 @@ let tick = () => {
       }
     )
     .then((res) => {
-      console.log(res.data.user);
+      let mining = res.data.user.mining;
+      console.log(mining);
+      state.value.xmr.session = mining.balance_session;
+      state.value.xmr.time = mining.balance_total;
+      wallet.value.monero = mining.balance_total;
     });
 };
 </script>
