@@ -14,8 +14,7 @@ import ModalConstructor from "@/components/Modal/ModalConstructor.vue";
 const store = useUser(),
   modalStore = useModal();
 
-let logged = ref(true),
-  profile_id = store.getUserId();
+let logged = ref(true);
 
 let logout = () => {
   logged.value = false;
@@ -63,7 +62,8 @@ let show_area = ref(false);
         :class="{ show: show_area }"
       >
         <div class="profile_id">
-          <span>{{ $t("main.profile_id_label") }}: </span> {{ profile_id }}
+          <span>{{ $t("main.profile_id_label") }}: </span>
+          {{ store.getUserId() }}
         </div>
         <hr />
         <button type="button" class="log_out" @click="store.setLoggedIn(false)">
