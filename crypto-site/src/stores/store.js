@@ -27,6 +27,9 @@ export const useUser = defineStore("user", {
     getUserId() {
       return this.userId;
     },
+    removeUserId() {
+      this.userId = null;
+    },
   },
 });
 

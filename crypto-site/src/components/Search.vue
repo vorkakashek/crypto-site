@@ -15,12 +15,20 @@ let search_val = ref("");
 let search = (e) => {
   if (search_val.value.length > 0) {
     axios
-      .post(`https://fatpockets.io/api/v1/user/search`, {
-        query: search_val.value,
-      })
+      .post(
+        "https://fatpockets.io/api/v1/user/search",
+        {
+          query: search_val.value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data.link);
+          window.open(res.data.searchLink, "_blank");
         }
       });
   }
