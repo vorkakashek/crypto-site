@@ -3,11 +3,10 @@ import { ref, watch, computed } from "vue";
 import { useModal } from "@/stores/store";
 import { useUser } from "@/stores/store";
 import axios from "redaxios";
-
 import Panel from "@/components/Panel.vue";
 import Input from "@/components/Input.vue";
-import Checkbox from "@/components/Checkbox.vue";
 import Button from "@/components/Button.vue";
+import Checkbox from "@/components/Checkbox.vue";
 
 let store = useModal();
 let storeUser = useUser();
