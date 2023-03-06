@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onUnmounted } from "vue";
+import { ref, computed, watch, onUnmounted, onMounted } from "vue";
 import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import PluginBanner from "@/components/PluginBanner.vue";
@@ -240,6 +240,11 @@ let startMining = () => {
   }
 };
 
+onMounted(() => {
+  console.log("Tick");
+  tick();
+});
+
 let tick = () => {
   let power = ref("mid");
   switch (miner_power.value) {
@@ -252,7 +257,11 @@ let tick = () => {
     case "Heavy":
       power.value = "high";
       break;
+    default:
+      power.value = "mid";
+      break;
   }
+  console.log(power);
   axios
     .post(
       "https://fatpockets.io/api/v1/user/mining/tick",
@@ -268,9 +277,12 @@ let tick = () => {
     .then((res) => {
       let mining = res.data.user.mining;
       console.log(mining);
-      state.value.xmr.session = mining.balance_session;
-      state.value.xmr.time = mining.balance_total;
-      wallet.value.monero = mining.balance_total;
+      state.value.xmr.session = mining.balance_session.xmr;
+      state.value.xmr.time = mining.balance_total.xmr;
+      state.value.usd.session = mining.balance_session.usd;
+      state.value.usd.time = mining.balance_total.usd;
+      wallet.value.monero = mining.balance_total.xmr;
+      wallet.value.usd = mining.balance_total.usd;
     });
 };
 </script>
