@@ -16,6 +16,16 @@ export const useUser = defineStore("user", {
   state: () => ({
     loggedIn: useStorage("loggedIn", false),
     userId: useStorage("userId", null),
+    userXmr: {
+      session: useStorage("userXmr.session", "0"),
+      total: useStorage("userXmr.total", "0"),
+      profit: useStorage("userXmr.profit", "0"),
+    },
+    userUsd: {
+      session: useStorage("userUsd.session", "0"),
+      total: useStorage("userUsd.total", "0"),
+      profit: useStorage("userUsd.profit", "0"),
+    },
   }),
   actions: {
     setLoggedIn(loggedIn) {
@@ -29,6 +39,16 @@ export const useUser = defineStore("user", {
     },
     removeUserId() {
       this.userId = null;
+    },
+    setUserUsd(data) {
+      this.userUsd.session = String(data.session);
+      this.userUsd.total = String(data.total);
+      this.userUsd.profit = String(data.profit);
+    },
+    setUserXmr(data) {
+      this.userXmr.session = String(data.session);
+      this.userXmr.total = String(data.total);
+      this.userXmr.profit = String(data.profit);
     },
   },
 });

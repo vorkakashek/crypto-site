@@ -39,6 +39,17 @@ let sign_in = (e) => {
           console.log(res.data);
           storeUser.setLoggedIn(true);
           storeUser.setUserId(res.data.user.id);
+          let mining = res.data.user.mining;
+          storeUser.setUserXmr({
+            session: mining.balance_session.xmr,
+            total: mining.balance_total.xmr,
+            // profit: res.data.near_profit_day.xmr,
+          });
+          storeUser.setUserUsd({
+            session: mining.balance_session.usd,
+            total: mining.balance_total.usd,
+            // profit: res.data.near_profit_day.usd,
+          });
           localStorage.setItem("token", res.data.token);
           store.hide();
         }
@@ -70,6 +81,17 @@ let sign_up = (e) => {
           storeUser.setLoggedIn(true);
           localStorage.setItem("token", res.data.token);
           storeUser.setUserId(res.data.user.id);
+          let mining = res.data.user.mining;
+          storeUser.setUserXmr({
+            session: mining.balance_session.xmr,
+            total: mining.balance_total.xmr,
+            // profit: res.data.near_profit_day.xmr,
+          });
+          storeUser.setUserUsd({
+            session: mining.balance_session.usd,
+            total: mining.balance_total.usd,
+            // profit: res.data.near_profit_day.usd,
+          });
           store.hide();
         }
       })

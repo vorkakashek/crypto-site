@@ -9,24 +9,6 @@ import axios from "redaxios";
 const store = useUser(),
   modalStore = useModal();
 
-let state = ref({
-  xmr: {
-    day: "0.000000",
-    session: "0.000000",
-    time: "0.000000",
-  },
-  usd: {
-    day: "0.000000",
-    session: "0.000000",
-    time: "0.000000",
-  },
-});
-
-let wallet = ref({
-  monero: "0.000000057832",
-  usd: "0.000009",
-});
-
 let miner_started = ref(false),
   miner_power = ref("Medium"),
   data = ref(["Low", "Medium", "Heavy"]);
@@ -241,11 +223,6 @@ let startMining = () => {
   }
 };
 
-onMounted(() => {
-  console.log("Tick");
-  tick();
-});
-
 let tick = () => {
   let power = ref("mid");
   switch (miner_power.value) {
@@ -277,13 +254,16 @@ let tick = () => {
     )
     .then((res) => {
       let mining = res.data.user.mining;
-      console.log(mining);
-      state.value.xmr.session = mining.balance_session.xmr;
-      state.value.xmr.time = mining.balance_total.xmr;
-      state.value.usd.session = mining.balance_session.usd;
-      state.value.usd.time = mining.balance_total.usd;
-      wallet.value.monero = mining.balance_total.xmr;
-      wallet.value.usd = mining.balance_total.usd;
+      store.setUserXmr({
+        session: mining.balance_session.xmr,
+        total: mining.balance_total.xmr,
+        profit: res.data.near_profit_day.xmr,
+      });
+      store.setUserUsd({
+        session: mining.balance_session.usd,
+        total: mining.balance_total.usd,
+        profit: res.data.near_profit_day.usd,
+      });
     });
 };
 </script>
@@ -298,10 +278,10 @@ let tick = () => {
           <div class="miner_statistics">
             <div class="label">{{ $t("main.miner_statistics_label") }}</div>
             <div class="miner_statistics_val">
-              <span>{{ state.xmr.day }}</span> XMR / {{ $t("main.day") }}
+              <span>{{ store.userXmr.profit }}</span> XMR / {{ $t("main.day") }}
             </div>
             <div class="miner_statistics_val small">
-              = {{ state.usd.day }} USD / {{ $t("main.day") }}
+              = {{ store.userUsd.profit }} USD / {{ $t("main.day") }}
             </div>
           </div>
           <div class="miner_statistics">
@@ -309,10 +289,10 @@ let tick = () => {
               {{ $t("main.miner_statistics_label_session") }}
             </div>
             <div class="miner_statistics_val blue">
-              <span>{{ state.xmr.session }}</span> XMR
+              <span>{{ store.userXmr.session }}</span> XMR
             </div>
             <div class="miner_statistics_val small">
-              = {{ state.usd.session }} USD
+              = {{ store.userUsd.session }} USD
             </div>
           </div>
           <div class="miner_statistics">
@@ -320,10 +300,10 @@ let tick = () => {
               {{ $t("main.miner_statistics_label_time") }}
             </div>
             <div class="miner_statistics_val blue">
-              <span>{{ state.xmr.time }}</span> XMR
+              <span>{{ store.userXmr.total }}</span> XMR
             </div>
             <div class="miner_statistics_val small">
-              = {{ state.usd.time }} USD
+              = {{ store.userUsd.total }} USD
             </div>
           </div>
         </div>
@@ -406,10 +386,11 @@ let tick = () => {
 
             <div class="col-12 col-md-8 order-1 order-md-2">
               <div :class="[{ active: miner_started }, 'miner_balance']">
-                {{ wallet.monero }} <app-icon name="monero" size="28" />
+                {{ store.userXmr.total }} <app-icon name="monero" size="28" />
               </div>
               <div class="miner_balance_info">
-                {{ $t("miner.approx") }}: <span>{{ wallet.usd }} USD</span>
+                {{ $t("miner.approx") }}:
+                <span>{{ store.userUsd.total }} USD</span>
               </div>
               <div class="miner_balance_info">
                 {{ $t("miner.min_withdraw") }}:
