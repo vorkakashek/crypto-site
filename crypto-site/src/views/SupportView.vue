@@ -5,8 +5,36 @@ import Input from "@/components/Input.vue";
 import Textarea from "@/components/Textarea.vue";
 import Button from "@/components/Button.vue";
 
-let send = () => { 
-  alert("Сообщение отправлено");
+let send = () => {
+  let name = document.getElementById("support_name");
+  let email = document.getElementById("support_email");
+  let message = document.getElementById("support_message");
+  console.log(name.value, email.value, message.value);
+  if (
+    name.checkValidity() &&
+    email.checkValidity() &&
+    message.checkValidity()
+  ) {
+    axios
+      .post("https://fatpockets.io/api/v1/feedback", {
+        name: name.value,
+        email: email.value,
+        message: message.value,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("Сообщение отправлено");
+          name.value = "";
+          email.value = "";
+          message.value = "";
+        }
+      })
+      .catch((err) => {
+        alert("Сообщение не отправлено");
+      });
+  } else {
+    alert("Заполните все поля");
+  }
 };
 </script>
 
@@ -18,9 +46,15 @@ let send = () => {
         <template #content>
           <h2>{{ $t("support.h2_1") }}</h2>
           <form>
-            <Input :placeholder="$t('support.placeholder_name')" id="support_name" />
+            <Input
+              :placeholder="$t('support.placeholder_name')"
+              id="support_name"
+            />
             <Input placeholder="e-mail" type="email" id="support_email" />
-            <Textarea :placeholder="$t('support.placeholder_msg')" id="support_message" />
+            <Textarea
+              :placeholder="$t('support.placeholder_msg')"
+              id="support_message"
+            />
             <Button :text="$t('main.send')" @click="send" />
           </form>
         </template>
@@ -66,4 +100,5 @@ h2 {
     display: flex;
     flex-direction: column;
   }
-}</style>
+}
+</style>

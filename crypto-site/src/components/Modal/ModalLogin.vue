@@ -43,12 +43,12 @@ let sign_in = (e) => {
           storeUser.setUserXmr({
             session: mining.balance_session.xmr,
             total: mining.balance_total.xmr,
-            // profit: res.data.near_profit_day.xmr,
+						profit: "0.00000000000",
           });
           storeUser.setUserUsd({
             session: mining.balance_session.usd,
             total: mining.balance_total.usd,
-            // profit: res.data.near_profit_day.usd,
+						profit: "0.00000000000",
           });
           localStorage.setItem("token", res.data.token);
           store.hide();
@@ -85,12 +85,12 @@ let sign_up = (e) => {
           storeUser.setUserXmr({
             session: mining.balance_session.xmr,
             total: mining.balance_total.xmr,
-            // profit: res.data.near_profit_day.xmr,
+            profit: "0.00000000000",
           });
           storeUser.setUserUsd({
             session: mining.balance_session.usd,
             total: mining.balance_total.usd,
-            // profit: res.data.near_profit_day.usd,
+            profit: "0.00000000000",
           });
           store.hide();
         }

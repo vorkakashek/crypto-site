@@ -8,7 +8,34 @@ const { tm, t } = useI18n();
 
 let a = computed(() => tm("main.search_tip_list"));
 
-let search_tip_list = ref(a);
+let search_marks = ref([
+  { label: "Google", href: "https://google.com" },
+  { label: "Yahoo", href: "https://yahoo.com" },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/",
+  },
+  {
+    label: "Youtube",
+    href: "https://www.youtube.com/",
+  },
+  {
+    label: "Twitter",
+    href: "https://www.twitter.com/",
+  },
+  {
+    label: "Whatsapp",
+    href: "https://www.whatsapp.com/",
+  },
+  {
+    label: "Amazon",
+    href: "https://www.amazon.com/",
+  },
+  {
+    label: "Weather",
+    href: "https://www.weather.com/",
+  },
+]);
 
 let search_val = ref("");
 
@@ -54,13 +81,15 @@ let search = (e) => {
             </div>
           </fieldset>
           <div class="search_tip_list">
-            <span
-              class="search_tip"
-              v-for="el in search_tip_list"
-              @click="search_val = el"
+            <a
+              class="search_mark"
+              v-for="el in search_marks"
+              :href="el.href"
+              target="_blank"
             >
-              {{ el }}
-            </span>
+              <app-icon :name="el.label.toLowerCase()" width="16" height="16" />
+              {{ el.label }}
+            </a>
           </div>
         </form>
       </div>
@@ -75,6 +104,19 @@ let search = (e) => {
   @include r(lg) {
     padding: 24px 0;
   }
+}
+
+.search_mark {
+  display: inline-flex;
+  padding: 8px 16px;
+  align-items: center;
+  background: white;
+  border: 1px solid rgba(112, 116, 141, 0.2);
+  border-radius: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  gap: 8px;
+  color: #42454b;
 }
 
 .search {
@@ -198,7 +240,9 @@ let search = (e) => {
   margin-top: 8px;
   margin-left: 8px;
   font-weight: 500;
-
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   span {
     margin-right: 16px;
     opacity: 0.5;
