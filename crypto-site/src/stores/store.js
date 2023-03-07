@@ -37,10 +37,12 @@ export const useModal = defineStore("modal", {
   state: () => ({
     visible: false,
     currentTab: 0,
+    type: "login",
   }),
   actions: {
-    show() {
+    show(type) {
       this.visible = true;
+      this.type = type;
       document.querySelector("html").style.overflow = "hidden";
     },
     hide() {

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import ModalLogin from '@/components/Modal/ModalLogin.vue'
+import ModalPayout from '@/components/Modal/ModalPayout.vue'
 import { useI18n } from "vue-i18n"
 import { useModal } from "@/stores/store"
 
@@ -17,7 +18,8 @@ const store = useModal()
                     <div class="modal">
                         <div class="modal_content">
                             <app-icon class="modal_close" name="close_2" size="24" @click="store.hide()" />
-                            <ModalLogin />
+                            <ModalLogin v-if="store.type === 'login'"/>
+                            <ModalPayout v-if="store.type === 'payout'"/>
                         </div>
                     </div>
                 </div>

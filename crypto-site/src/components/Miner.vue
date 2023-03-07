@@ -3,10 +3,11 @@ import { ref, computed, watch, onUnmounted, onMounted } from "vue";
 import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import PluginBanner from "@/components/PluginBanner.vue";
-import { useUser } from "@/stores/store";
+import { useUser, useModal } from "@/stores/store";
 import axios from "redaxios";
 
-const store = useUser();
+const store = useUser(),
+  modalStore = useModal();
 
 let state = ref({
   xmr: {
@@ -388,7 +389,11 @@ let tick = () => {
                     {{ $t("miner.stop") }}
                   </template>
                 </button>
-                <button class="miner_button outlined" type="button">
+                <button
+                  class="miner_button outlined"
+                  type="button"
+                  @click="modalStore.show('payout')"
+                >
                   <app-icon name="circle-multiple" />
                   {{ $t("miner.withdraw") }}
                 </button>

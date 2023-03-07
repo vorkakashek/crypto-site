@@ -5,6 +5,10 @@ import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import Table from "@/components/Table.vue";
 import axios from "redaxios";
+import { useUser, useModal } from "@/stores/store";
+
+const store = useUser(),
+  modalStore = useModal();
 
 const { tm } = useI18n();
 
@@ -46,7 +50,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Panel>
+  <Panel v-if="store.loggedIn">
     <template #content>
       <Label :label="$t('history.label')" icon="wallet" />
       <div class="row g-0">
@@ -55,7 +59,11 @@ onMounted(() => {
         </div>
         <div class="col-12 col-md-4">
           <div class="history_withdraw_area">
-            <button class="miner_button outlined" type="button">
+            <button
+              class="miner_button outlined"
+              type="button"
+              @click="modalStore.show('payout')"
+            >
               <app-icon name="circle-multiple" />
               {{ $t("history.button") }}
             </button>

@@ -42,7 +42,7 @@ let show_area = ref(false);
         <button
           type="button"
           class="btn_sign_up"
-          @click="modalStore.show(), modalStore.setTab(1)"
+          @click="modalStore.show('login'), modalStore.setTab(1)"
         >
           {{ $t("main.sign_up") }}
         </button>
@@ -50,7 +50,7 @@ let show_area = ref(false);
         <button
           type="button"
           class="btn_sign_in"
-          @click="modalStore.show(), modalStore.setTab(0)"
+          @click="modalStore.show('login'), modalStore.setTab(0)"
         >
           {{ $t("main.sign_in") }}
         </button>
