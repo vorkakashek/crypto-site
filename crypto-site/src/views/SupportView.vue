@@ -1,9 +1,14 @@
 <script setup>
+import { ref, watch } from "vue";
 import Panel from "@/components/Panel.vue";
 import axios from "redaxios";
 import Input from "@/components/Input.vue";
 import Textarea from "@/components/Textarea.vue";
 import Button from "@/components/Button.vue";
+
+let form_error = ref(true),
+  form_text = ref("Error"),
+  timer = ref();
 
 let send = () => {
   let name = document.getElementById("support_name");
@@ -30,12 +35,27 @@ let send = () => {
         }
       })
       .catch((err) => {
-        alert("Сообщение не отправлено");
+        console.log(err.data.errors.email[0]);
+        form_error.value = true;
+        if (err.data.errors.email[0]) {
+          form_text.value = "modal.error_email";
+        } else {
+          form_text.value = "modal.error";
+        }
       });
   } else {
-    alert("Заполните все поля");
+    form_error.value = true;
+    form_text.value = "modal.error";
   }
 };
+
+watch(form_error, () => {
+  if (form_error.value) {
+    timer.value = setTimeout(() => {
+      form_error.value = false;
+    }, 5000);
+  }
+});
 </script>
 
 <template>
@@ -56,6 +76,7 @@ let send = () => {
               id="support_message"
             />
             <Button :text="$t('main.send')" @click="send" />
+            <div id="form_error" v-if="form_error">{{ $t(form_text) }}</div>
           </form>
         </template>
       </Panel>
@@ -64,7 +85,23 @@ let send = () => {
 </template>
 
 <style lang="scss" scoped>
+#form_error {
+  color: var(--error);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  font-size: 11px;
+  opacity: 0.8;
+  bottom: -8px;
+  position: absolute;
+  left: 25%;
+  transform: translate(-50%, 0);
+  white-space: nowrap;
+}
+
 form {
+  position: relative;
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, 1fr);
@@ -99,6 +136,10 @@ h2 {
   form {
     display: flex;
     flex-direction: column;
+  }
+
+  #form_error {
+    left: 50%;
   }
 }
 </style>

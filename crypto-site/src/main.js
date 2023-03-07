@@ -87,6 +87,7 @@ const content = {
         "Я подтверждаю, что ознакомлен(-а) с {0} и, что я достиг(-ла) совершеннолетия и не являюсь гражданином США.",
       tos: "Пользовательским соглашением",
       error: "Заполните все поля корректно",
+      error_email: "Укажите правильный E-mail",
       restore: "Восстановить пароль",
       restore_msg: "Напомнить пароль?",
       back: "Назад",
@@ -418,7 +419,7 @@ const content = {
       h2_1: "Отправьте нам свой вопрос",
       placeholder_msg: "Ваше сообщение",
       placeholder_name: "имя",
-    }
+    },
   },
   en: {
     main: {
@@ -485,6 +486,7 @@ const content = {
       terms: `I confirm that I have read, accepted and agreed to all {0}, that I am of legal age, and I am not specified as a US person.`,
       tos: "Terms of Use",
       error: "Fill all fields correctly",
+      error_email: "Indicate the correct e-mail",
       restore: "Restore password",
       restore_msg: "Forgot password?",
       back: "Back",
@@ -816,7 +818,7 @@ const content = {
       h2_1: "Send your question to us",
       placeholder_msg: "Your message",
       placeholder_name: "Name",
-    }
+    },
   },
 };
 
