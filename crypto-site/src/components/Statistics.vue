@@ -1,79 +1,46 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import Table from "@/components/Table.vue";
 import axios from "redaxios";
 
-const { tm } = useI18n();
+const { tm} = useI18n();
 
 let tab_current = ref(0),
   online = ref(86312);
 
-let tab_handler = (el) => {
-  console.log(el);
-};
+let header_1 = computed(() => tm("statistics.header_1"))
+let header_2 = computed(() => tm("statistics.header_2"))
 
-let table_1 = computed({
-  get: () => {
-    return {
-      rows: [
-        tm("statistics.header_1"),
-        // ["588-588-543", "0.000000057832", "0.000000057832", "0.000000057832"],
-        // ["588-588-543", "0.000000057832", "0.000000057832", "0.000000057832"],
-        // ["588-588-543", "0.000000057832", "0.000000057832", "0.000000057832"],
-        // ["588-588-543", "0.000000057832", "0.000000057832", "0.000000057832"],
-        // ["588-588-543", "0.000000057832", "0.000000057832", "0.000000057832"],
-        // ["588-588-543", "0.000000057832", "0.000000057832", "0.000000057832"],
-        // ["588-588-543", "0.000000057832", "0.000000057832", "0.000000057832"],
-      ],
-    };
-  },
-  set: (value) => {
-    return value;
-  },
-});
+watch(header_1, () => {
+  table_1.value.rows[0] = header_1.value
+})
+watch(header_2, () => {
+  table_2.value.rows[0] = header_2.value
+})
 
-let table_2 = computed({
-  get: () => {
-    return {
-      rows: [
-        tm("statistics.header_2"),
-        // ["588-588-543", "0.000000057832", "02/24/2023", "14:35"],
-        // ["5843", "0.07832", "02/24/2023", "14:35"],
-        // ["588-588-543", "0.000000057832", "02/24/2023", "14:35"],
-        // ["588-588-543", "0.000000057832", "02/24/2023", "14:35"],
-        // ["588-588-543", "0.000000057832", "02/24/2023", "14:35"],
-        // ["588-588-543", "0.000000057832", "02/24/2023", "14:35"],
-        // ["588-588-543", "0.000000057832", "02/24/2023", "14:35"],
-      ],
-    };
-  },
-  set: (value) => {
-    return value;
-  },
-});
+let table_1 = ref({ rows: [header_1.value]})
+
+let table_2 = ref({ rows: [header_2.value]})
+
 
 onMounted(() => {
   console.log("NOUNT");
   axios.post("https://fatpockets.io/api/v1/leaders/top").then((response) => {
     if (response.data.success) {
-      let top = [tm("statistics.header_1")];
       response.data.top.forEach((user) => {
-        top.push([user.id, user.per_day, user.per_week, user.per_month]);
-      });
-      table_1.value.rows = top;
+        table_1.value.rows.push([user.id, user.per_day, user.per_week, user.per_month])
+      })
       online.value = response.data.online;
     }
   });
   axios.post("https://fatpockets.io/api/v1/payments/last").then((response) => {
     if (response.data.success) {
-      let top = [tm("statistics.header_2")];
       response.data.payments.forEach((payment) => {
-        top.push([payment.id, payment.sum, payment.date, payment.time]);
-      });
-      table_2.value.rows = top;
+        table_2.value.rows.push([payment.id, payment.sum, payment.date, payment.time])
+      })
     }
   });
 });
@@ -88,10 +55,8 @@ onMounted(() => {
       </div>
       <div class="tab_group">
         <div class="tab_list">
-          <label
-            :class="[{ active: index === tab_current }, 'tab_item']"
-            v-for="(tab_name, index) in $tm('statistics.tab_names')"
-          >
+          <label :class="[{ active: index === tab_current }, 'tab_item']"
+            v-for="(tab_name, index) in $tm('statistics.tab_names')">
             <input type="radio" :value="index" v-model="tab_current" />
             {{ tab_name }}
           </label>
@@ -170,6 +135,7 @@ onMounted(() => {
         &:nth-child(3) {
           max-width: 80px;
         }
+
         &:nth-child(4) {
           max-width: 40px;
         }
@@ -189,6 +155,7 @@ onMounted(() => {
       &:first-child {
         max-width: 94px;
       }
+
       &:nth-child(2),
       &:nth-child(3),
       &:nth-child(4) {
