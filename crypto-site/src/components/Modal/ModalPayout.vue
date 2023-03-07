@@ -20,6 +20,34 @@ watch(form_error, () => {
     }, 5000);
   }
 });
+
+let withdraw = (e) => {
+  let wallet = document.getElementById("id_wallet");
+  let sum = document.getElementById("withdraw_sum");
+  if (wallet.checkValidity() && sum.checkValidity()) {
+    axios
+      .post(
+        "https://fatpockets.io/api/v1/user/payout/new",
+        {
+          pocket: wallet.value,
+          sum: sum.value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data.success);
+      })
+      .catch((err) => {
+        alert("Операция не была завершена, попробуйте позже");
+      });
+  } else {
+    form_error.value = true;
+  }
+};
 </script>
 
 <template>
@@ -30,7 +58,7 @@ watch(form_error, () => {
         <div class="tab_content">
           <form>
             <Input placeholder="ID wallet" id="id_wallet" />
-            <Input placeholder="sum" id="sum" />
+            <Input placeholder="sum" type="number" id="withdraw_sum" />
             <Button :text="$t('history.button')" @click="withdraw" />
             <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
           </form>

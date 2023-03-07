@@ -15,7 +15,6 @@ let props = defineProps({
   minlength: {
     type: String,
     required: false,
-    default: "",
   },
   id: {
     type: String,
@@ -50,7 +49,10 @@ let type_computed = computed(() => {
       v-model="input"
       :minlength="props.minlength"
       :id="props.id"
-      :class="{ filled: input.length > 0, input_password: type === 'password' }"
+      :class="{
+        filled: String(input).length > 0,
+        input_password: type === 'password',
+      }"
       required
     />
     <div class="input_label">{{ placeholder }}</div>
@@ -75,6 +77,12 @@ let type_computed = computed(() => {
   &.active {
     background-color: var(--blue);
   }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .custom_input {
