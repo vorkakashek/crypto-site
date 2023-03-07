@@ -38,6 +38,7 @@ const content = {
       miner_power: "Мощность майнинга",
       msg_let_sing_up_1: "Зарегистрируйтесь",
       msg_let_sing_up_2: ", чтобы начать выводить средства",
+      send: "Отправить",
     },
     banner: {
       title: "Установи расширение",
@@ -412,6 +413,12 @@ const content = {
       h2_2: "Листинг монет",
       p_2: "Что касается листинга монет, отправьте запрос по адресу: {0}",
     },
+    support: {
+      h1: "Поддержка",
+      h2_1: "Отправьте нам свой вопрос",
+      placeholder_msg: "Ваше сообщение",
+      placeholder_name: "имя",
+    }
   },
   en: {
     main: {
@@ -430,6 +437,7 @@ const content = {
       miner_power: "Miner power",
       msg_let_sing_up_1: "Sign up",
       msg_let_sing_up_2: ", to start mining up",
+      send: "Send",
     },
     banner: {
       title: "Install extension",
@@ -803,6 +811,12 @@ const content = {
       h2_2: "Сoin listing",
       p_2: "Regarding coin listing please submit your request to {0}",
     },
+    support: {
+      h1: "Support",
+      h2_1: "Send your question to us",
+      placeholder_msg: "Your message",
+      placeholder_name: "Name",
+    }
   },
 };
 
