@@ -192,8 +192,6 @@ let radialBar_series_full = [100];
 let startMining = () => {
   if (!miner_started.value) {
     miner_started.value = true;
-    // console.log(miner_started.value)
-
     axios
       .post("https://fatpockets.io/api/v1/user/mining/start", null, {
         headers: {

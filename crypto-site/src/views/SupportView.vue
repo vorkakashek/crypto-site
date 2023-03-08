@@ -6,8 +6,8 @@ import Input from "@/components/Input.vue";
 import Textarea from "@/components/Textarea.vue";
 import Button from "@/components/Button.vue";
 
-let form_error = ref(true),
-  form_text = ref("Error"),
+let form_error = ref(false),
+  form_text = ref(""),
   timer = ref();
 
 let send = () => {
@@ -49,13 +49,16 @@ let send = () => {
   }
 };
 
-watch(form_error, () => {
-  if (form_error.value) {
+watch(form_error, (val) => {
+  if (val) {
     timer.value = setTimeout(() => {
-      form_error.value = false;
-    }, 5000);
+      form_error.value = false
+    }, 3000)
+  } else {
+    clearTimeout(timer.value)
   }
-});
+
+})
 </script>
 
 <template>
@@ -66,15 +69,9 @@ watch(form_error, () => {
         <template #content>
           <h2>{{ $t("support.h2_1") }}</h2>
           <form>
-            <Input
-              :placeholder="$t('support.placeholder_name')"
-              id="support_name"
-            />
+            <Input :placeholder="$t('support.placeholder_name')" id="support_name" />
             <Input placeholder="e-mail" type="email" id="support_email" />
-            <Textarea
-              :placeholder="$t('support.placeholder_msg')"
-              id="support_message"
-            />
+            <Textarea :placeholder="$t('support.placeholder_msg')" id="support_message" />
             <Button :text="$t('main.send')" @click="send" />
             <div id="form_error" v-if="form_error">{{ $t(form_text) }}</div>
           </form>
