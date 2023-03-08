@@ -163,8 +163,8 @@ let tickInterval = ref(null);
 let real_speed = computed(() =>
   miner_started.value
     ? Number(
-        (speed.value * (data.value.indexOf(miner_power.value) + 0.8)).toFixed(2)
-      )
+      (speed.value * (data.value.indexOf(miner_power.value) + 0.8)).toFixed(2)
+    )
     : 0
 );
 
@@ -192,8 +192,8 @@ let radialBar_series_full = [100];
 let startMining = () => {
   if (!miner_started.value) {
     miner_started.value = true;
-    tick();
-    tickInterval.value = setInterval(tick, 10000);
+    // console.log(miner_started.value)
+
     axios
       .post("https://fatpockets.io/api/v1/user/mining/start", null, {
         headers: {
@@ -203,6 +203,8 @@ let startMining = () => {
       .then((response) => {
         if (response.data.success) {
           miner_started.value = true;
+          tick();
+          tickInterval.value = setInterval(tick, 10000);
         }
       });
   } else {
@@ -269,12 +271,11 @@ let tick = () => {
 </script>
 
 <template>
+  <div>{{ miner_started }}</div>
   <div class="row miner_area">
     <div class="col-12 col-lg-7 order-2 order-lg-1">
       <div class="row miner">
-        <div
-          class="col-12 col-sm-5 order-2 order-sm-1 d-flex d-sm-block flex-wrap"
-        >
+        <div class="col-12 col-sm-5 order-2 order-sm-1 d-flex d-sm-block flex-wrap">
           <div class="miner_statistics">
             <div class="label">{{ $t("main.miner_statistics_label") }}</div>
             <div class="miner_statistics_val">
@@ -314,33 +315,17 @@ let tick = () => {
                 {{ real_speed }} <span>{{ $t("miner.speed") }}</span>
               </div>
               <div class="miner_speed_filled">
-                <apexchart
-                  height="360px"
-                  type="radialBar"
-                  :options="radialBar_options"
-                  :series="radialBar_series"
-                />
+                <apexchart height="360px" type="radialBar" :options="radialBar_options" :series="radialBar_series" />
               </div>
               <div class="miner_speed_dashed">
-                <apexchart
-                  height="260px"
-                  type="radialBar"
-                  :options="radialBar_options2"
-                  :series="radialBar_series"
-                />
+                <apexchart height="260px" type="radialBar" :options="radialBar_options2" :series="radialBar_series" />
               </div>
               <div class="miner_speed_dashed disabled">
-                <apexchart
-                  height="260px"
-                  type="radialBar"
-                  :options="radialBar_options3"
-                  :series="radialBar_series_full"
-                />
+                <apexchart height="260px" type="radialBar" :options="radialBar_options3"
+                  :series="radialBar_series_full" />
               </div>
             </div>
-            <a href="#" class="ext_btn"
-              >{{ $t("miner.button") }} <app-icon name="rocket"
-            /></a>
+            <a href="#" class="ext_btn">{{ $t("miner.button") }} <app-icon name="rocket" /></a>
           </div>
         </div>
       </div>
@@ -355,11 +340,7 @@ let tick = () => {
             <Label :label="$t('main.miner_balance')" icon="wallet" />
             <div class="col-12 col-md-4 order-2 order-md-1">
               <div class="miner_actions">
-                <button
-                  class="miner_button filled"
-                  type="button"
-                  @click="startMining"
-                >
+                <button class="miner_button filled" type="button" @click="startMining">
                   <template v-if="!miner_started">
                     <app-icon name="start" />
                     {{ $t("miner.start") }}
@@ -369,17 +350,12 @@ let tick = () => {
                     {{ $t("miner.stop") }}
                   </template>
                 </button>
-                <button
-                  class="miner_button outlined"
-                  type="button"
-                  @click="modalStore.show('payout')"
-                >
+                <button class="miner_button outlined" type="button" @click="modalStore.show('payout')">
                   <app-icon name="circle-multiple" />
                   {{ $t("miner.withdraw") }}
                 </button>
                 <div class="msg_let_sing_up" v-if="!store.loggedIn">
-                  <button>{{ $t("main.msg_let_sing_up_1") }}</button
-                  >{{ $t("main.msg_let_sing_up_2") }}
+                  <button>{{ $t("main.msg_let_sing_up_1") }}</button>{{ $t("main.msg_let_sing_up_2") }}
                 </div>
               </div>
             </div>
@@ -404,17 +380,8 @@ let tick = () => {
               <Label :label="$t('main.miner_power')" icon="power" />
             </div>
             <div class="col-12 col-md-8">
-              <vue-slider
-                v-model="miner_power"
-                :marks="true"
-                :data="data"
-                :included="true"
-                :absorb="true"
-                :dotSize="24"
-                :height="10"
-                :lazy="true"
-                tooltip="none"
-              ></vue-slider>
+              <vue-slider v-model="miner_power" :marks="true" :data="data" :included="true" :absorb="true" :dotSize="24"
+                :height="10" :lazy="true" tooltip="none"></vue-slider>
             </div>
           </div>
         </template>
