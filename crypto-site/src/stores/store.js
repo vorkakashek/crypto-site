@@ -4,6 +4,7 @@ import { useStorage } from "@vueuse/core";
 export const useStore = defineStore("store", {
   state: () => ({
     domain: "https://coinpit.co",
+    // domain: "https://fatpockets.io",
   }),
 })
 

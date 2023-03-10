@@ -1,8 +1,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useStore } from "@/stores/store";
 import axios from "redaxios";
 const { tm, t } = useI18n();
+
+let store = useStore()
 
 // console.log(tm('main.search_tip_list'))
 
@@ -43,7 +46,7 @@ let search = (e) => {
   if (search_val.value.length > 0) {
     axios
       .post(
-        "https://fatpockets.io/api/v1/user/search",
+        `${store.domain}/api/v1/user/search`,
         {
           query: search_val.value,
         },

@@ -1,27 +1,23 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import Table from "@/components/Table.vue";
 import axios from "redaxios";
-import { useUser, useModal } from "@/stores/store";
+import { useUser, useModal, useStore } from "@/stores/store";
 
-const store = useUser(),
-  modalStore = useModal();
+const storeUser = useUser(),
+  storeModal = useModal(),
+  store = useStore()
 
 const { tm } = useI18n();
 
 let table = computed({
   get: () => {
     return {
-      // columns: tm('history.header'),
       rows: [
         tm("history.header"),
-        // ["02/24/2023", "0.000000057832", { status: "progress" }],
-        // ["02/24/2023", "0.000000057832", { status: "error" }],
-        // ["02/24/2023", "0.000000057832", { status: "success" }],
-        // ["02/24/2023", "0.000000057832", { status: "success" }],
       ],
     };
   },
@@ -32,7 +28,7 @@ let table = computed({
 
 onMounted(() => {
   axios
-    .post("https://fatpockets.io/api/v1/user/payouts/list", null, {
+    .post(`${store.domain}/api/v1/user/payouts/list`, null, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -50,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Panel v-if="store.loggedIn">
+  <Panel v-if="storeUser.loggedIn">
     <template #content>
       <Label :label="$t('history.label')" icon="wallet" />
       <div class="row g-0">
@@ -62,7 +58,7 @@ onMounted(() => {
             <button
               class="miner_button outlined"
               type="button"
-              @click="modalStore.show('payout')"
+              @click="storeModal.show('payout')"
             >
               <app-icon name="circle-multiple" />
               {{ $t("history.button") }}

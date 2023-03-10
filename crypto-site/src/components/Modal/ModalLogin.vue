@@ -1,11 +1,11 @@
 <script setup>
-import { ref, watch, computed } from "vue";
-import { useModal, useUser, useStore } from "@/stores/store";
-import axios from "redaxios";
-import Panel from "@/components/Panel.vue";
-import Input from "@/components/Input.vue";
-import Button from "@/components/Button.vue";
-import Checkbox from "@/components/Checkbox.vue";
+import { ref, watch, computed } from "vue"
+import { useModal, useUser, useStore } from "@/stores/store"
+import axios from "redaxios"
+import Panel from "@/components/Panel.vue"
+import Input from "@/components/Input.vue"
+import Button from "@/components/Button.vue"
+import Checkbox from "@/components/Checkbox.vue"
 
 let store = useStore();
 let storeModal = useModal();
@@ -206,7 +206,6 @@ watch(tab_current, () => (form_error.value = false));
             <Input placeholder="password" type="password" id="password_sign_up" />
             <Checkbox :text="$t('modal.terms')" id="check_sign_up" />
             <Button :text="$t('main.sign_up')" @click="sign_up" />
-            <FormError :msg="form_err" />
             <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
           </form>
         </div>

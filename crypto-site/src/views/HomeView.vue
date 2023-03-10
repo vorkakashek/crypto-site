@@ -8,7 +8,7 @@ import History from "@/components/History.vue";
 import Statistics from "@/components/Statistics.vue";
 import { useUser } from "@/stores/store"
 
-const store = useUser()
+const storeUser = useUser()
 
 </script>
 
@@ -30,7 +30,7 @@ const store = useUser()
         </div>
       </div>
       <!-- <Banner type="horizontal" /> -->
-      <History v-if="store.loggedIn" />
+      <History v-if="storeUser.loggedIn" />
       <Statistics />
     </div>
   </main>

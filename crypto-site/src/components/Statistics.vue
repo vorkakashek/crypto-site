@@ -1,12 +1,14 @@
 <script setup>
-import { ref, computed, onMounted, watch, onBeforeUnmount } from "vue";
-import { useI18n } from "vue-i18n";
-import Panel from "@/components/Panel.vue";
-import Label from "@/components/Label.vue";
-import Table from "@/components/Table.vue";
-import axios from "redaxios";
+import { ref, computed, onMounted, watch, onBeforeUnmount } from "vue"
+import { useStore } from "@/stores/store"
+import { useI18n } from "vue-i18n"
+import Panel from "@/components/Panel.vue"
+import Label from "@/components/Label.vue"
+import Table from "@/components/Table.vue"
+import axios from "redaxios"
 
-const { tm } = useI18n();
+const { tm } = useI18n()
+let store = useStore()
 
 let tab_current = ref(0),
   online = ref(86312),
@@ -30,7 +32,7 @@ let table_2 = ref({ rows: [header_2.value] })
 
 // обновляем список топа "Лидеры заработка"
 let refresh_top = () => {
-  axios.post("https://fatpockets.io/api/v1/leaders/top").then((response) => {
+  axios.post(`${store.domain}/api/v1/leaders/top`).then((response) => {
     if (response.data.success) {
       response.data.top.forEach((user) => {
         table_1.value.rows.push([user.id, user.per_day, user.per_week, user.per_month])
@@ -38,7 +40,7 @@ let refresh_top = () => {
       online.value = response.data.online;
 
       timer_1.value = setInterval(() => {
-        axios.post("https://fatpockets.io/api/v1/leaders/top").then((response) => {
+        axios.post(`${store.domain}/api/v1/leaders/top`).then((response) => {
           if (response.data.success) {
             response.data.top.forEach((user, index) => {
               table_1.value.rows[index + 1] = [user.id, user.per_day, user.per_week, user.per_month]
@@ -53,13 +55,13 @@ let refresh_top = () => {
 
 // обновляем список топа "Выплаченные средства"
 let refresh_last = () => {
-  axios.post("https://fatpockets.io/api/v1/payments/last").then((response) => {
+  axios.post(`${store.domain}/api/v1/payments/last`).then((response) => {
     if (response.data.success) {
       response.data.payments.forEach((payment) => {
         table_2.value.rows.push([payment.id, payment.sum, payment.date, payment.time])
       })
       timer_2.value = setInterval(() => {
-        axios.post("https://fatpockets.io/api/v1/payments/last").then((response) => {
+        axios.post(`${store.domain}/api/v1/payments/last`).then((response) => {
           if (response.data.success) {
             response.data.payments.forEach((payment, index) => {
               table_2.value.rows[index + 1] = [payment.id, payment.sum, payment.date, payment.time]

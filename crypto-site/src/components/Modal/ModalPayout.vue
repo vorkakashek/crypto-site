@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch } from "vue";
 import { useUser } from "@/stores/store";
 import axios from "redaxios";
 import Panel from "@/components/Panel.vue";
@@ -9,8 +9,7 @@ import Button from "@/components/Button.vue";
 let storeUser = useUser();
 
 let form_error = ref(false),
-  timer = ref(),
-  sum_input = ref('')
+  timer = ref()
 
 watch(form_error, () => {
   if (form_error.value) {
@@ -26,7 +25,7 @@ let withdraw = (e) => {
   if (wallet.checkValidity() && sum.checkValidity()) {
     axios
       .post(
-        "https://fatpockets.io/api/v1/user/payout/new",
+        `${store.domain}/api/v1/user/payout/new`,
         {
           pocket: wallet.value,
           sum: sum.value,
@@ -57,7 +56,7 @@ let withdraw = (e) => {
         <div class="tab_content">
           <form>
             <Input placeholder="ID wallet" id="id_wallet" />
-            <Input placeholder="sum" type="number" id="withdraw_sum" :val="storeUser.userXmr.current"/>
+            <Input placeholder="sum" type="number" id="withdraw_sum" :val="storeUser.userXmr.current" />
             <Button :text="$t('history.button')" @click="withdraw" />
             <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
           </form>
@@ -81,6 +80,7 @@ let withdraw = (e) => {
 .tab_title {
   margin: 0;
 }
+
 .tab_content {
   margin-top: 24px;
 }

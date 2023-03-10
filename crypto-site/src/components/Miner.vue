@@ -1,13 +1,15 @@
 <script setup>
-import { ref, computed, watch, onBeforeUnmount } from "vue";
+import { ref, computed, watch, onBeforeUnmount, onMounted } from "vue";
+import { useRouter, useRoute } from 'vue-router'
 import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import PluginBanner from "@/components/PluginBanner.vue";
-import { useUser, useModal } from "@/stores/store";
+import { useUser, useModal, useStore } from "@/stores/store";
 import axios from "redaxios";
 
-const store = useUser(),
-  modalStore = useModal()
+const storeUser = useUser(),
+  storeModal = useModal(),
+  store = useStore()
 
 let miner_started = ref(false),
   miner_power = ref("Medium"),
@@ -169,10 +171,19 @@ let radialBar_series = computed(() => [miner_started.value ? speed_percent.value
 
 let radialBar_series_full = [100];
 
+onMounted(() => {
+  if (window.location.href.includes("?play=on")) {
+    axios.get('?play=on')
+      .finally(() => {
+        startMining()
+      })
+  }
+})
+
 let startMining = () => {
   if (!miner_started.value) {
     axios
-      .post("https://fatpockets.io/api/v1/user/mining/start", null, {
+      .post(`${store.domain}/api/v1/user/mining/start`, null, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -188,7 +199,7 @@ let startMining = () => {
     tick();
     clearInterval(tickInterval.value);
     axios
-      .post("https://fatpockets.io/api/v1/user/mining/stop", null, {
+      .post(`${store.domain}/api/v1/user/mining/stop`, null, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -220,7 +231,7 @@ let tick = () => {
   // console.log(power)
   axios
     .post(
-      "https://fatpockets.io/api/v1/user/mining/tick",
+      `${store.domain}/api/v1/user/mining/tick`,
       {
         speed: power.value,
       },
@@ -237,13 +248,13 @@ let tick = () => {
       speed_val.value = speed.hashes_per_sec
       speed_percent.value = speed.percent
 
-      store.setUserXmr({
+      storeUser.setUserXmr({
         session: mining.balance_session.xmr,
         total: mining.balance_total.xmr,
         current: mining.balance_current.xmr,
         profit: res.data.near_profit_day.xmr,
       })
-      store.setUserUsd({
+      storeUser.setUserUsd({
         session: mining.balance_session.usd,
         total: mining.balance_total.usd,
         current: mining.balance_current.usd,
@@ -268,10 +279,10 @@ onBeforeUnmount(() => {
           <div class="miner_statistics">
             <div class="label">{{ $t("main.miner_statistics_label") }}</div>
             <div class="miner_statistics_val">
-              <span>{{ store.userXmr.profit }}</span> XMR / {{ $t("main.day") }}
+              <span>{{ storeUser.userXmr.profit }}</span> XMR / {{ $t("main.day") }}
             </div>
             <div class="miner_statistics_val small">
-              = {{ store.userUsd.profit }} USD / {{ $t("main.day") }}
+              = {{ storeUser.userUsd.profit }} USD / {{ $t("main.day") }}
             </div>
           </div>
           <div class="miner_statistics">
@@ -279,10 +290,10 @@ onBeforeUnmount(() => {
               {{ $t("main.miner_statistics_label_session") }}
             </div>
             <div class="miner_statistics_val blue">
-              <span>{{ store.userXmr.session }}</span> XMR
+              <span>{{ storeUser.userXmr.session }}</span> XMR
             </div>
             <div class="miner_statistics_val small">
-              = {{ store.userUsd.session }} USD
+              = {{ storeUser.userUsd.session }} USD
             </div>
           </div>
           <div class="miner_statistics">
@@ -290,10 +301,10 @@ onBeforeUnmount(() => {
               {{ $t("main.miner_statistics_label_time") }}
             </div>
             <div class="miner_statistics_val blue">
-              <span>{{ store.userXmr.total }}</span> XMR
+              <span>{{ storeUser.userXmr.total }}</span> XMR
             </div>
             <div class="miner_statistics_val small">
-              = {{ store.userUsd.total }} USD
+              = {{ storeUser.userUsd.total }} USD
             </div>
           </div>
         </div>
@@ -340,12 +351,12 @@ onBeforeUnmount(() => {
                   </template>
                 </button>
                 <button class="miner_button outlined" type="button"
-                  @click="store.loggedIn ? modalStore.show('payout') : modalStore.show('login'), modalStore.setTab(1)">
+                  @click="storeUser.loggedIn ? storeModal.show('payout') : storeModal.show('login'), storeModal.setTab(1)">
                   <app-icon name="circle-multiple" />
                   {{ $t("miner.withdraw") }}
                 </button>
-                <div class="msg_let_sing_up" v-if="!store.loggedIn">
-                  <button @click="modalStore.show('login'), modalStore.setTab(1)">{{ $t("main.msg_let_sing_up_1")
+                <div class="msg_let_sing_up" v-if="!storeUser.loggedIn">
+                  <button @click="storeModal.show('login'), storeModal.setTab(1)">{{ $t("main.msg_let_sing_up_1")
                   }}</button>{{ $t("main.msg_let_sing_up_2") }}
                 </div>
               </div>
@@ -353,11 +364,11 @@ onBeforeUnmount(() => {
 
             <div class="col-12 col-md-8 order-1 order-md-2">
               <div :class="[{ active: miner_started }, 'miner_balance']">
-                {{ store.userXmr.current }} <app-icon name="monero" size="28" />
+                {{ storeUser.userXmr.current }} <app-icon name="monero" size="28" />
               </div>
               <div class="miner_balance_info">
                 {{ $t("miner.approx") }}:
-                <span>{{ store.userUsd.current }} USD</span>
+                <span>{{ storeUser.userUsd.current }} USD</span>
               </div>
               <div class="miner_balance_info">
                 {{ $t("miner.min_withdraw") }}:
@@ -528,7 +539,7 @@ onBeforeUnmount(() => {
 .miner_statistics {
   &:first-child {
     .miner_statistics_val {
-      > span {
+      >span {
         font-size: 13px;
       }
     }
