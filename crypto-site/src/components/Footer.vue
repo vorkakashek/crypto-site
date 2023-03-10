@@ -9,7 +9,7 @@ import Banner from "@/components/Banner.vue";
     <div class="container">
         <div class="row">
             <div class="col-md-5 col-12">
-                <Banner />
+                <!-- <Banner /> -->
             </div>
 
             <div class="col-12 col-md-3 col-lg-2 offset-0 offset-lg-2 mt-5 mt-md-0">

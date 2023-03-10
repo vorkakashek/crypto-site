@@ -26,6 +26,7 @@ let show = ref(true)
     border-radius: 16px;
     color: var(--error);
     font-weight: 700;
+    margin-top: 24px;
 
     > .icon {
         margin-right: 12px;

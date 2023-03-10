@@ -1,6 +1,12 @@
 import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
 
+export const useStore = defineStore("store", {
+  state: () => ({
+    domain: "https://coinpit.co",
+  }),
+})
+
 export const useLangSwitcher = defineStore("langSwitcher", {
   state: () => ({
     lang: useStorage("lang", "ru"),
@@ -19,11 +25,13 @@ export const useUser = defineStore("user", {
     userXmr: {
       session: useStorage("userXmr.session", "0"),
       total: useStorage("userXmr.total", "0"),
+      current: useStorage("userXmr.current", "0"),
       profit: useStorage("userXmr.profit", "0"),
     },
     userUsd: {
       session: useStorage("userUsd.session", "0"),
       total: useStorage("userUsd.total", "0"),
+      current: useStorage("userUsd.current", "0"),
       profit: useStorage("userUsd.profit", "0"),
     },
   }),
@@ -43,11 +51,13 @@ export const useUser = defineStore("user", {
     setUserUsd(data) {
       this.userUsd.session = String(data.session);
       this.userUsd.total = String(data.total);
+      this.userUsd.current = String(data.current);
       this.userUsd.profit = String(data.profit);
     },
     setUserXmr(data) {
       this.userXmr.session = String(data.session);
       this.userXmr.total = String(data.total);
+      this.userXmr.current = String(data.current);
       this.userXmr.profit = String(data.profit);
     },
   },

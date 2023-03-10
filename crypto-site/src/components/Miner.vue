@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onUnmounted, onMounted } from "vue";
+import { ref, computed, watch, onBeforeUnmount } from "vue";
 import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import PluginBanner from "@/components/PluginBanner.vue";
@@ -7,11 +7,11 @@ import { useUser, useModal } from "@/stores/store";
 import axios from "redaxios";
 
 const store = useUser(),
-  modalStore = useModal();
+  modalStore = useModal()
 
 let miner_started = ref(false),
   miner_power = ref("Medium"),
-  data = ref(["Low", "Medium", "Heavy"]);
+  data = ref(["Low", "Medium", "Heavy"])
 
 let radialBar_options = {
   // colors: ["0278F6"],
@@ -55,11 +55,11 @@ let radialBar_options = {
     lineCap: "butt",
   },
   labels: ["Progress"],
-};
+}
 
 let randomNum = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
 
 let radialBar_options2 = {
   plotOptions: {
@@ -106,7 +106,7 @@ let radialBar_options2 = {
     dashArray: 2,
   },
   labels: [""],
-};
+}
 
 let radialBar_options3 = {
   plotOptions: {
@@ -152,46 +152,25 @@ let radialBar_options3 = {
     dashArray: 2,
   },
   labels: [""],
-};
+}
 
-let speed_max = ref(30);
-let speed = ref(7.21);
-
-let a = ref(null);
-let tickInterval = ref(null);
-
-let real_speed = computed(() =>
-  miner_started.value
-    ? Number(
-      (speed.value * (data.value.indexOf(miner_power.value) + 0.8)).toFixed(2)
-    )
-    : 0
-);
+let speed_val = ref(0),
+  tickInterval = ref(null),
+  speed_percent = ref(0)
 
 watch(miner_power, () => {
   if (miner_started.value) {
-    tick();
+    tick()
   }
-});
-watch(miner_started, () => {
-  if (miner_started.value) {
-    a.value = setInterval(() => {
-      speed.value = randomNum(70, 80) / 10;
-    }, randomNum(600, 3000));
-  } else {
-    clearInterval(a.value);
-    speed.value = 0;
-  }
-});
+})
 
-let radialBar_series = computed(() => [
-  real_speed.value / (speed_max.value / 100),
-]);
+let speed_val_computed = computed(() => miner_started.value ? speed_val.value : 0)
+let radialBar_series = computed(() => [miner_started.value ? speed_percent.value : 0]) // скорость в процентах
+
 let radialBar_series_full = [100];
 
 let startMining = () => {
   if (!miner_started.value) {
-    miner_started.value = true;
     axios
       .post("https://fatpockets.io/api/v1/user/mining/start", null, {
         headers: {
@@ -206,7 +185,6 @@ let startMining = () => {
         }
       });
   } else {
-    miner_started.value = false;
     tick();
     clearInterval(tickInterval.value);
     axios
@@ -219,27 +197,27 @@ let startMining = () => {
         if (response.data.success) {
           miner_started.value = false;
         }
-      });
+      })
   }
-};
+}
 
 let tick = () => {
-  let power = ref("mid");
+  let power = ref("mid")
   switch (miner_power.value) {
     case "Low":
-      power.value = "low";
-      break;
+      power.value = "low"
+      break
     case "Medium":
-      power.value = "mid";
-      break;
+      power.value = "mid"
+      break
     case "Heavy":
-      power.value = "high";
-      break;
+      power.value = "high"
+      break
     default:
-      power.value = "mid";
-      break;
+      power.value = "mid"
+      break
   }
-  console.log(power);
+  // console.log(power)
   axios
     .post(
       "https://fatpockets.io/api/v1/user/mining/tick",
@@ -253,23 +231,36 @@ let tick = () => {
       }
     )
     .then((res) => {
-      let mining = res.data.user.mining;
+      let mining = res.data.user.mining
+      let speed = res.data.speed
+
+      speed_val.value = speed.hashes_per_sec
+      speed_percent.value = speed.percent
+
       store.setUserXmr({
         session: mining.balance_session.xmr,
         total: mining.balance_total.xmr,
+        current: mining.balance_current.xmr,
         profit: res.data.near_profit_day.xmr,
-      });
+      })
       store.setUserUsd({
         session: mining.balance_session.usd,
         total: mining.balance_total.usd,
+        current: mining.balance_current.usd,
         profit: res.data.near_profit_day.usd,
-      });
-    });
-};
+      })
+    })
+}
+
+onBeforeUnmount(() => {
+  clearInterval(tickInterval.value)
+  if (miner_started.value) {
+    startMining()
+  }
+})
 </script>
 
 <template>
-  <div>{{ miner_started }}</div>
   <div class="row miner_area">
     <div class="col-12 col-lg-7 order-2 order-lg-1">
       <div class="row miner">
@@ -310,7 +301,7 @@ let tick = () => {
           <div class="miner_speed_outer">
             <div class="miner_speed_area">
               <div class="miner_speed_value">
-                {{ real_speed }} <span>{{ $t("miner.speed") }}</span>
+                {{ speed_val_computed }} <span>{{ $t("miner.speed") }}</span>
               </div>
               <div class="miner_speed_filled">
                 <apexchart height="360px" type="radialBar" :options="radialBar_options" :series="radialBar_series" />
@@ -348,23 +339,25 @@ let tick = () => {
                     {{ $t("miner.stop") }}
                   </template>
                 </button>
-                <button class="miner_button outlined" type="button" @click="modalStore.show('payout')">
+                <button class="miner_button outlined" type="button"
+                  @click="store.loggedIn ? modalStore.show('payout') : modalStore.show('login'), modalStore.setTab(1)">
                   <app-icon name="circle-multiple" />
                   {{ $t("miner.withdraw") }}
                 </button>
                 <div class="msg_let_sing_up" v-if="!store.loggedIn">
-                  <button>{{ $t("main.msg_let_sing_up_1") }}</button>{{ $t("main.msg_let_sing_up_2") }}
+                  <button @click="modalStore.show('login'), modalStore.setTab(1)">{{ $t("main.msg_let_sing_up_1")
+                  }}</button>{{ $t("main.msg_let_sing_up_2") }}
                 </div>
               </div>
             </div>
 
             <div class="col-12 col-md-8 order-1 order-md-2">
               <div :class="[{ active: miner_started }, 'miner_balance']">
-                {{ store.userXmr.total }} <app-icon name="monero" size="28" />
+                {{ store.userXmr.current }} <app-icon name="monero" size="28" />
               </div>
               <div class="miner_balance_info">
                 {{ $t("miner.approx") }}:
-                <span>{{ store.userUsd.total }} USD</span>
+                <span>{{ store.userUsd.current }} USD</span>
               </div>
               <div class="miner_balance_info">
                 {{ $t("miner.min_withdraw") }}:
@@ -532,8 +525,18 @@ let tick = () => {
   }
 }
 
+.miner_statistics {
+  &:first-child {
+    .miner_statistics_val {
+      > span {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
 .miner_statistics_val {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 
   &.small {

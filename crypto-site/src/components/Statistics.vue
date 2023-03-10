@@ -1,15 +1,17 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
 import Panel from "@/components/Panel.vue";
 import Label from "@/components/Label.vue";
 import Table from "@/components/Table.vue";
 import axios from "redaxios";
 
-const { tm} = useI18n();
+const { tm } = useI18n();
 
 let tab_current = ref(0),
-  online = ref(86312);
+  online = ref(86312),
+  timer_1 = ref(),
+  timer_2 = ref()
 
 let header_1 = computed(() => tm("statistics.header_1"))
 let header_2 = computed(() => tm("statistics.header_2"))
@@ -21,29 +23,64 @@ watch(header_2, () => {
   table_2.value.rows[0] = header_2.value
 })
 
-let table_1 = ref({ rows: [header_1.value]})
+let table_1 = ref({ rows: [header_1.value] })
 
-let table_2 = ref({ rows: [header_2.value]})
+let table_2 = ref({ rows: [header_2.value] })
 
 
-onMounted(() => {
-  console.log("NOUNT");
+// обновляем список топа "Лидеры заработка"
+let refresh_top = () => {
   axios.post("https://fatpockets.io/api/v1/leaders/top").then((response) => {
     if (response.data.success) {
       response.data.top.forEach((user) => {
         table_1.value.rows.push([user.id, user.per_day, user.per_week, user.per_month])
       })
       online.value = response.data.online;
+
+      timer_1.value = setInterval(() => {
+        axios.post("https://fatpockets.io/api/v1/leaders/top").then((response) => {
+          if (response.data.success) {
+            response.data.top.forEach((user, index) => {
+              table_1.value.rows[index + 1] = [user.id, user.per_day, user.per_week, user.per_month]
+            })
+            online.value = response.data.online
+          }
+        })
+      }, 10000)
     }
-  });
+  })
+}
+
+// обновляем список топа "Выплаченные средства"
+let refresh_last = () => {
   axios.post("https://fatpockets.io/api/v1/payments/last").then((response) => {
     if (response.data.success) {
       response.data.payments.forEach((payment) => {
         table_2.value.rows.push([payment.id, payment.sum, payment.date, payment.time])
       })
+      timer_2.value = setInterval(() => {
+        axios.post("https://fatpockets.io/api/v1/payments/last").then((response) => {
+          if (response.data.success) {
+            response.data.payments.forEach((payment, index) => {
+              table_2.value.rows[index + 1] = [payment.id, payment.sum, payment.date, payment.time]
+            })
+          }
+        })
+      }, 10000)
     }
-  });
-});
+  })
+}
+
+onMounted(() => {
+  refresh_top()
+  refresh_last()
+})
+
+onBeforeUnmount(() => {
+  clearInterval(timer_1.value)
+  clearInterval(timer_2.value)
+})
+
 </script>
 
 <template>

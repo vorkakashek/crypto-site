@@ -99,7 +99,7 @@ let search = (e) => {
 
 <style lang="scss" scoped>
 .area_search {
-  padding: 60px 0;
+  padding: 60px 0 36px 0;
 
   @include r(lg) {
     padding: 24px 0;

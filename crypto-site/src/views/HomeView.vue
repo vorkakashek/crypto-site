@@ -15,21 +15,21 @@ const store = useUser()
 <template>
   <main>
     <div class="container">
-      <Search />
+      <!-- <Search /> -->
       <Error />
-      <Banner type="horizontal" />
+      <!-- <Banner type="horizontal" /> -->
       <div class="row">
         <div class="col-12 col-lg-2">
-          <Banner type="vertical" />
+          <!-- <Banner type="vertical" /> -->
         </div>
         <div class="col-12 col-xl-8">
           <Miner />
         </div>
         <div class="col-12 col-lg-2">
-          <Banner type="vertical" />
+          <!-- <Banner type="vertical" /> -->
         </div>
       </div>
-      <Banner type="horizontal" />
+      <!-- <Banner type="horizontal" /> -->
       <History v-if="store.loggedIn" />
       <Statistics />
     </div>

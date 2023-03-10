@@ -1,20 +1,20 @@
 <script setup>
 import { ref, watch, computed } from "vue";
-import { useModal } from "@/stores/store";
-import { useUser } from "@/stores/store";
+import { useModal, useUser, useStore } from "@/stores/store";
 import axios from "redaxios";
 import Panel from "@/components/Panel.vue";
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
 import Checkbox from "@/components/Checkbox.vue";
 
-let store = useModal();
+let store = useStore();
+let storeModal = useModal();
 let storeUser = useUser();
 
 let tab_current = computed({
-  get: () => store.currentTab,
+  get: () => storeModal.currentTab,
   set: (val) => {
-    store.currentTab = val;
+    storeModal.currentTab = val;
     return val;
   },
 });
@@ -30,28 +30,30 @@ let sign_in = (e) => {
 
   if (email.checkValidity() && password.checkValidity()) {
     axios
-      .post("https://fatpockets.io/api/v1/login", {
+      .post(`${store.domain}/api/v1/login`, {
         email: email.value,
         password: password.value,
       })
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data);
+          // console.log(res.data);
           storeUser.setLoggedIn(true);
           storeUser.setUserId(res.data.user.id);
           let mining = res.data.user.mining;
           storeUser.setUserXmr({
             session: mining.balance_session.xmr,
             total: mining.balance_total.xmr,
-						profit: "0.00000000000",
+            current: mining.balance_current.xmr,
+            profit: "0.00000000000",
           });
           storeUser.setUserUsd({
             session: mining.balance_session.usd,
             total: mining.balance_total.usd,
-						profit: "0.00000000000",
+            current: mining.balance_current.usd,
+            profit: "0.00000000000",
           });
           localStorage.setItem("token", res.data.token);
-          store.hide();
+          storeModal.hide();
         }
       })
       .catch((err) => {
@@ -72,31 +74,50 @@ let sign_up = (e) => {
     check.checkValidity()
   ) {
     axios
-      .post("https://fatpockets.io/api/v1/signup", {
+      .post(`${store.domain}/api/v1/user/signup`, {
         email: email.value,
         password: password.value,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       })
       .then((res) => {
         if (res.data.success) {
+          // console.log(res.data)
+
           storeUser.setLoggedIn(true);
           localStorage.setItem("token", res.data.token);
           storeUser.setUserId(res.data.user.id);
-          let mining = res.data.user.mining;
+
+          let mining = res.data.user.mining
+
           storeUser.setUserXmr({
             session: mining.balance_session.xmr,
+            current: mining.balance_current.xmr,
             total: mining.balance_total.xmr,
             profit: "0.00000000000",
           });
           storeUser.setUserUsd({
             session: mining.balance_session.usd,
+            current: mining.balance_current.usd,
             total: mining.balance_total.usd,
             profit: "0.00000000000",
           });
-          store.hide();
+          storeModal.hide();
         }
       })
       .catch((err) => {
-        alert("Регистрация не прошла, попробуйте позже");
+        // err.data.forEach((msg) => alert(msg))
+        // console.log(err)
+        if(err.data.errors.email) {
+          err.data.errors.email.forEach((msg) => alert(msg))
+        }
+        if(err.data.errors.password) {
+          err.data.errors.password.forEach((msg) => alert(msg))
+        }
+        
+        // alert("Регистрация не прошла, попробуйте позже");
       });
   } else {
     form_error.value = true;
@@ -107,13 +128,13 @@ let restore = (e) => {
   let email = document.getElementById("email_restore");
   if (email.checkValidity()) {
     axios
-      .post("https://fatpockets.io/api/v1/forget", {
+      .post(`${store.domain}/api/v1/forget`, {
         email: email.value,
       })
       .then((res) => {
         restore_tab.value = false;
         restore_tab_2.value = true;
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         alert("Пользователь не найден");
@@ -128,13 +149,13 @@ let new_password = (e) => {
   let password = document.getElementById("password_restore");
   if (code.checkValidity() && password.checkValidity()) {
     axios
-      .post(`https://fatpockets.io/api/v1/restore/${code.value}`, {
+      .post(`${store.domain}/api/v1/restore/${code.value}`, {
         password: password.value,
       })
       .then((res) => {
         if (res.data.success) {
           alert(res.data.message);
-          store.hide();
+          storeModal.hide();
         }
       });
     // .catch((err) => {
@@ -161,26 +182,16 @@ watch(tab_current, () => (form_error.value = false));
     <template #content>
       <div class="tab_group">
         <div class="tab_list">
-          <label
-            :class="[{ active: index === tab_current }, 'tab_item']"
-            v-for="(tab_name, index) in $tm('modal.tab_names')"
-          >
+          <label :class="[{ active: index === tab_current }, 'tab_item']"
+            v-for="(tab_name, index) in $tm('modal.tab_names')">
             <input type="radio" :value="index" v-model="tab_current" />
             {{ tab_name }}
           </label>
         </div>
-        <div
-          class="tab_content"
-          v-if="tab_current === 0 && !restore_tab && !restore_tab_2"
-        >
+        <div class="tab_content" v-if="tab_current === 0 && !restore_tab && !restore_tab_2">
           <form>
             <Input placeholder="e-mail" type="email" id="email_sign_in" />
-            <Input
-              minlength="6"
-              placeholder="password"
-              type="password"
-              id="password_sign_in"
-            />
+            <Input placeholder="password" type="password" id="password_sign_in" />
             <div class="restore_pass" @click="restore_tab = true">
               {{ $t("modal.restore_msg") }}
             </div>
@@ -192,14 +203,10 @@ watch(tab_current, () => (form_error.value = false));
         <div class="tab_content" v-if="tab_current === 1">
           <form>
             <Input placeholder="e-mail" type="email" id="email_sign_up" />
-            <Input
-              minlength="6"
-              placeholder="password"
-              type="password"
-              id="password_sign_up"
-            />
+            <Input placeholder="password" type="password" id="password_sign_up" />
             <Checkbox :text="$t('modal.terms')" id="check_sign_up" />
             <Button :text="$t('main.sign_up')" @click="sign_up" />
+            <FormError :msg="form_err" />
             <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
           </form>
         </div>
@@ -218,23 +225,15 @@ watch(tab_current, () => (form_error.value = false));
         <div class="tab_content" v-if="tab_current === 0 && restore_tab_2">
           <form>
             <Input placeholder="code" id="code_restore" />
-            <Input
-              minlength="6"
-              placeholder="password"
-              type="password"
-              id="password_restore"
-            />
+            <Input minlength="6" placeholder="password" type="password" id="password_restore" />
             <Button :text="$t('main.restore')" @click="new_password" />
             <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
-            <div
-              class="restore_pass_back"
-              @click="
-                () => {
-                  restore_tab_2 = false;
-                  restore_tab = true;
-                }
-              "
-            >
+            <div class="restore_pass_back" @click="
+              () => {
+                restore_tab_2 = false;
+                restore_tab = true;
+              }
+            ">
               {{ $t("modal.back") }}
             </div>
           </form>

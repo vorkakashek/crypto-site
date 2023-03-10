@@ -20,9 +20,13 @@ let props = defineProps({
     type: String,
     required: false,
   },
+  val: {
+    type: String,
+    required: false
+  }
 });
 
-let input = ref(""),
+let input = ref(props.val ? props.val : ""),
   pass_show = ref(false);
 
 let type_computed = computed(() => {
@@ -36,25 +40,15 @@ let type_computed = computed(() => {
 
 <template>
   <label class="custom_input">
-    <div
-      :class="[{ active: pass_show }, 'password_controller']"
-      v-if="type === 'password'"
-      @click="pass_show = !pass_show"
-    >
+    <div :class="[{ active: pass_show }, 'password_controller']" v-if="type === 'password'"
+      @click="pass_show = !pass_show">
       <app-icon name="eye-off" size="18" v-if="!pass_show" />
       <app-icon name="eye-on" size="18" v-else />
     </div>
-    <input
-      :type="type_computed"
-      v-model="input"
-      :minlength="props.minlength"
-      :id="props.id"
-      :class="{
-        filled: String(input).length > 0,
-        input_password: type === 'password',
-      }"
-      required
-    />
+    <input :type="type_computed" v-model="input" :minlength="props.minlength" :id="props.id" :class="{
+      filled: String(input).length > 0,
+      input_password: type === 'password',
+    }" required />
     <div class="input_label">{{ placeholder }}</div>
   </label>
 </template>
@@ -104,7 +98,7 @@ input::-webkit-inner-spin-button {
     &.filled {
       border-color: var(--blue);
 
-      ~ .input_label {
+      ~.input_label {
         bottom: 100%;
         transform: translateY(-4px);
         // left: 0;

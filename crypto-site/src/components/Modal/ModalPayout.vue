@@ -1,17 +1,16 @@
 <script setup>
 import { ref, watch, computed } from "vue";
-import { useModal } from "@/stores/store";
 import { useUser } from "@/stores/store";
 import axios from "redaxios";
 import Panel from "@/components/Panel.vue";
 import Input from "@/components/Input.vue";
 import Button from "@/components/Button.vue";
 
-let store = useModal();
 let storeUser = useUser();
 
 let form_error = ref(false),
-  timer = ref();
+  timer = ref(),
+  sum_input = ref('')
 
 watch(form_error, () => {
   if (form_error.value) {
@@ -39,7 +38,7 @@ let withdraw = (e) => {
         }
       )
       .then((res) => {
-        console.log(res.data.success);
+        // console.log(res.data.success);
       })
       .catch((err) => {
         alert("Операция не была завершена, попробуйте позже");
@@ -58,7 +57,7 @@ let withdraw = (e) => {
         <div class="tab_content">
           <form>
             <Input placeholder="ID wallet" id="id_wallet" />
-            <Input placeholder="sum" type="number" id="withdraw_sum" />
+            <Input placeholder="sum" type="number" id="withdraw_sum" :val="storeUser.userXmr.current"/>
             <Button :text="$t('history.button')" @click="withdraw" />
             <div id="form_error" v-if="form_error">{{ $t("modal.error") }}</div>
           </form>
