@@ -1,10 +1,13 @@
 <script setup>
 import { ref, watch } from "vue";
+import { useStore } from "@/stores/store";
 import Panel from "@/components/Panel.vue";
 import axios from "redaxios";
 import Input from "@/components/Input.vue";
 import Textarea from "@/components/Textarea.vue";
 import Button from "@/components/Button.vue";
+
+let store = useStore()
 
 let form_error = ref(false),
   form_text = ref(""),
@@ -21,7 +24,7 @@ let send = () => {
     message.checkValidity()
   ) {
     axios
-      .post("https://fatpockets.io/api/v1/feedback", {
+      .post(`${store.domain}/api/v1/feedback`, {
         name: name.value,
         email: email.value,
         message: message.value,

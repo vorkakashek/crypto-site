@@ -1,17 +1,18 @@
 <script setup>
 import { onMounted } from 'vue'
 import { RouterView } from "vue-router"
-import { useUser } from "@/stores/store";
+import { useUser, useStore } from "@/stores/store";
 import axios from "redaxios";
 import Navigation from "./components/Navigation.vue"
 import Footer from "./components/Footer.vue"
 
-let storeUser = useUser()
+let storeUser = useUser(),
+  store = useStore()
 
 onMounted(() => {
   if (!localStorage.getItem("token")) {
     axios
-      .post("https://fatpockets.io/api/v1/init")
+      .post(`${store.domain}/api/v1/init`)
       .then((res) => {
         if (res.data.success) {
           // console.log(res.data)
